@@ -2,6 +2,10 @@ from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime, timezone
 import json
 import math
+import os
+
+WORKING_DIR = os.path.dirname(os.path.realpath(__file__))
+USERS_DATA_PATH = os.path.join(WORKING_DIR, "users.json")
 
 app = Flask(__name__)
 
@@ -42,7 +46,7 @@ def auth():
 		return {"status": "success"}
 
 
-with open('users.json', 'rb') as f:
+with open(USERS_DATA_PATH, 'rb') as f:
 	users_data = json.loads(f.read())
 
 
