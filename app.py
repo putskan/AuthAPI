@@ -43,7 +43,7 @@ def auth():
 			error_msg = 'Session Expired.'
 			return Response(json.dumps({"status": "failed", "error_msg": error_msg}), status=400)
 
-		return {"status": "success", "user_type": filtered_users[0]['user_type']}
+		return Response(json.dumps({"status": "success", "user_type": filtered_users[0]['user_type']}))
 
 
 with open(USERS_DATA_PATH, 'rb') as f:
