@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, Response
 from datetime import datetime, timezone
 import json
 import math
@@ -23,7 +23,7 @@ def auth():
 	filtered_users = [user_dict for user_dict in users_data if user_dict['u'].lower() == username.lower() and user_dict['p'] == password]
 	if not filtered_users:
 		error_msg = "Username or password are incorrect."
-		return {"status": "failed", "error_msg": error_msg}
+		return Response(json.dumps({"status": "failed", "error_msg": error_msg}), status=400)
 
 	else:
 		# compare user allowed time to current time
@@ -37,11 +37,11 @@ def auth():
 			hours_left = math.floor((begin_time - now).seconds / 60 / 60 % 24)
 			mins_left = math.ceil((begin_time - now).seconds / 60 % 60)
 			error_msg = 'oops! you are a bit early. please try again in {0} days, {1} hours and {2} minutes'.format(days_left, hours_left, mins_left)
-			return {"status": "failed", "error_msg": error_msg}
+			return Response(json.dumps({"status": "failed", "error_msg": error_msg}), status=400)
 
 		elif now > end_time:
 			error_msg = 'Session Expired.'
-			return {"status": "failed", "error_msg": error_msg}
+			return Response(json.dumps({"status": "failed", "error_msg": error_msg}), status=400)
 
 		return {"status": "success", "user_type": filtered_users[0]['user_type']}
 
